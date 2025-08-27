@@ -10,11 +10,22 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const corsOptions = {
-  origin: 'https://users.metropolia.fi/~eetupas/travel-form',
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://users.metropolia.fi',
+      'https://users.metropolia.fi/~eetupas/travel-form'
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
 
 app.use(cors(corsOptions)); // Use CORS middleware
 
